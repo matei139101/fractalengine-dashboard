@@ -1,37 +1,34 @@
-use std::sync::Arc;
-
-use fractalengine::ServiceLocator;
-use fractalengine_core::{Lifecycled, Service};
+use std::{rc::Rc};
+use fractalengine::{ServiceRegistry, LifeCycleHook, Service};
 
 pub struct DashboardService {
     name: String,
 }
 
 impl DashboardService {
-    pub fn new() -> Arc<Self> {
+    pub fn new() -> Rc<Self> {
         let dashboard_service = Self {
             name: "DashboardService".to_string(),
         };
 
-        Arc::new(dashboard_service)
+        Rc::new(dashboard_service)
     }
 
-    pub fn register(self_ptr: Arc<Self>, service_locator: &mut ServiceLocator) {
-        service_locator.register_service(self_ptr.clone());
-        service_locator.register_lifcycled_service(self_ptr.clone());
+    pub fn register(self_ptr: Rc<Self>, service_registry: &mut ServiceRegistry) {
+        service_registry.register_service(self_ptr.clone());
+        service_registry.register_lifecycled_service(self_ptr.clone());
     }
 }
 
 impl Service for DashboardService {
-    fn name(&self) -> &str {
+    fn get_name(&self) -> &str {
         &self.name
     }
 }
 
-impl Lifecycled for DashboardService {
+impl LifeCycleHook for DashboardService {
     fn init(&self) {}
-    fn re_init(&self) {}
-    fn tick(&self) {}
-    fn update(&self) {}
-    fn cleanup(&self) {}
+    fn update(&self) {
+        print!("Update from DashboardService");
+    }
 }
