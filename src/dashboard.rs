@@ -27,8 +27,10 @@ impl Service for DashboardService {
 }
 
 impl LifeCycleHook for DashboardService {
-    fn init(&self) {}
+    fn init(&self) {
+        println!("Initialization of DashboardService");
+    }
     fn update(&self) {
-        print!("Update from DashboardService");
+        println!("Update from DashboardService");
     }
 }
